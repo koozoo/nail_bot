@@ -1,11 +1,11 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
-from config import TOKEN_CHANEL
+from config import TOKEN, db
 
 
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=TOKEN_CHANEL)
+bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 
