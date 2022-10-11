@@ -2,6 +2,7 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN, db
 import markups as nav
+from GoogleSheets import test
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,8 +19,9 @@ async def start(message: types.Message):
 @dp.callback_query_handler(text='btnPrice')
 async def print_price(message: types.message):
     await bot.delete_message(message.from_user.id, message.message.message_id)
-    await bot.send_message(message.from_user.id, 'print price', reply_markup=nav.mainMenu)
+    await bot.send_message(message.from_user.id, 'sdfsdfsdfsdf', reply_markup=nav.mainMenu)
 
 
 def main():
-    executor.start_polling(dp, skip_updates=True)
+    # executor.start_polling(dp, skip_updates=True)
+    test()
