@@ -1,7 +1,7 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN, db
-
+import markups as nav
 
 logging.basicConfig(level=logging.INFO)
 
@@ -9,20 +9,16 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.Message):
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    user_name = message.from_user.full_name
+    await bot.send_message(message.from_user.id, f'Привет, {user_name}', reply_markup=nav.mainMenu)
 
-    await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
 
-
-@dp.message_handler(commands=['buy'])
-async def echo(message: types.Message):
-
-    # old style:
-
-    # await bot.send_message(message.chat.id, message.text)
-
-    await message.answer('Покупка курса')
+@dp.callback_query_handler(text='btnPrice')
+async def print_price(message: types.message):
+    await bot.delete_message(message.from_user.id, message.message.message_id)
+    await bot.send_message(message.from_user.id, 'print price', reply_markup=nav.mainMenu)
 
 
 def main():
