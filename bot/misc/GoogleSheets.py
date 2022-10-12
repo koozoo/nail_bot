@@ -5,7 +5,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import datetime
-from config import spreadsheet_id
+from bot.misc.config import spreadsheet_id
 
 
 class GoogleSheet:
@@ -45,8 +45,8 @@ class GoogleSheet:
                                                                   body=body).execute()
         print('{0} cells updated.'.format(result.get('totalUpdatedCells')))
 
-    def get_week_value(self, range_):
-        return self.service.spreadsheets().values().get(spreadsheetId=self.SPREADSHEET_ID, range=range_).execute()
+    def get_data_sheets(self, range_, dim):
+        return self.service.spreadsheets().values().get(spreadsheetId=self.SPREADSHEET_ID, range=range_, majorDimension=dim).execute()
 
     def get_day_value(self):
         pass
@@ -66,12 +66,13 @@ def test():
         [36],
         [56]
     ]
+    price_range, dimension = 'прайс!B2:C32', 'ROWS'
+    week_days, dimension_week = 'Ежедневник!C3:I7', 'COLUMNS'
+    pr = gs.get_data_sheets(price_range, dimension)
+    week_data = gs.get_data_sheets(week_days, dimension_week)
+    print(pr)
+    print(week_data)
     # gs.update_range_values(test_range, test_values)
-    gs.update_date_in_sheets()
-    a = gs.get_week_value('C5:I7')
-    b = gs.get_week_value('C2:C2')
-    c = gs.get_week_value('C3:I3')
-    print(a)
-    print(b)
-    print(c)
+
+
 
