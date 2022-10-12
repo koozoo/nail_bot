@@ -4,9 +4,9 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 mainMenu = InlineKeyboardMarkup(row_width=3)
 
 btnPrice = InlineKeyboardButton(text='Цены', callback_data='btnPrice')
-btnAdd = InlineKeyboardButton(text='Записаться', url='https://t.me/+2ma0p9Q84ppjNjQy')
-btnUpdate = InlineKeyboardButton(text='Перенсти запись', url='https://t.me/+2ma0p9Q84ppjNjQy')
-btnDel = InlineKeyboardButton(text='Отмена записи', url='https://t.me/+2ma0p9Q84ppjNjQy')
+btnAdd = InlineKeyboardButton(text='Записаться', callback_data='addEvent')
+btnUpdate = InlineKeyboardButton(text='Перенсти запись', callback_data='updateEvent')
+btnDel = InlineKeyboardButton(text='Отмена записи', callback_data='delEvent')
 
 mainMenu.insert(btnAdd)
 mainMenu.insert(btnUpdate)
@@ -14,4 +14,17 @@ mainMenu.insert(btnDel)
 mainMenu.insert(btnPrice)
 
 
-subMenu = InlineKeyboardMarkup(row_width=2)
+subMenuPrice = InlineKeyboardMarkup(row_width=1)
+
+btnSubAdd = InlineKeyboardButton(text='Записаться', callback_data='addEvent')
+btnBack = InlineKeyboardButton(text='назад', callback_data='btnBack')
+
+subMenuPrice.insert(btnSubAdd)
+subMenuPrice.insert(btnBack)
+
+
+priceMenu = InlineKeyboardMarkup(row_width=1)
+
+
+
+
