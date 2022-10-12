@@ -48,31 +48,13 @@ class GoogleSheet:
     def get_data_sheets(self, range_, dim):
         return self.service.spreadsheets().values().get(spreadsheetId=self.SPREADSHEET_ID, range=range_, majorDimension=dim).execute()
 
-    def get_day_value(self):
-        pass
-
     def update_date_in_sheets(self):
+        date_in_table = self.get_data_sheets('C2:C2', 'ROWS')
         dt = datetime.datetime.now()
-        date = [[dt.strftime("%d.%m.%Y")]]
-        date_cell = 'Ежедневник!C2:C2'
-        self.update_range_values(date_cell, date)
-
-
-def test():
-    gs = GoogleSheet()
-    test_range = 'Ежедневник!C2:C2'
-    test_values = [
-        [16],
-        [36],
-        [56]
-    ]
-    price_range, dimension = 'прайс!B2:C32', 'ROWS'
-    week_days, dimension_week = 'Ежедневник!C3:I7', 'COLUMNS'
-    pr = gs.get_data_sheets(price_range, dimension)
-    week_data = gs.get_data_sheets(week_days, dimension_week)
-    print(pr)
-    print(week_data)
-    # gs.update_range_values(test_range, test_values)
-
-
+        data = self.get_data_sheets('C3:I7', 'COLUMNS')
+        if date_in_table['values'][0][0][:2] != dt.strftime("%d.%m.%Y")[:2]:
+            date = [[dt.strftime("%d.%m.%Y")]]
+            date_cell = 'Ежедневник!C2:C2'
+            self.update_range_values(date_cell, date)
+            print(data)
 

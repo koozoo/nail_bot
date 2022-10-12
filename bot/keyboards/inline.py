@@ -17,7 +17,7 @@ mainMenu.insert(btnPrice)
 subMenuPrice = InlineKeyboardMarkup(row_width=1)
 
 btnSubAdd = InlineKeyboardButton(text='Записаться', callback_data='addEvent')
-btnBack = InlineKeyboardButton(text='назад', callback_data='btnBack')
+btnBack = InlineKeyboardButton(text='Назад', callback_data='btnBack')
 
 subMenuPrice.insert(btnSubAdd)
 subMenuPrice.insert(btnBack)

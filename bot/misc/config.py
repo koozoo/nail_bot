@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from bot.database.db import InitDataBase
+from bot.database.methods.create import CreateTable
 
 
 load_dotenv()
@@ -11,6 +11,6 @@ spreadsheet_id = os.getenv('SPREADSHEET_ID')
 
 # INIT DATA BASE
 DB_NAME = 'main.db'
-db = InitDataBase(DB_NAME)
+db = CreateTable(DB_NAME)
 db.crete_tables()
 
