@@ -12,7 +12,7 @@ async def start(msg: Message):
 
 async def back(msg: Message):
     user_name = msg.from_user.first_name
-    await msg.bot.send_message(msg.from_user.id, f'{user_name}, желаете записаться ?', reply_markup=nav.mainMenu)
+    await msg.bot.send_message(msg.from_user.id, f'{user_name}, желаете записаться ?', reply_markup=nav.subMenuPrice)
 
 
 async def watch_price(msg: Message):
@@ -21,7 +21,7 @@ async def watch_price(msg: Message):
     price_range, dimension = 'прайс!B2:C32', 'ROWS'
     p_data = gs.get_data_sheets(price_range, dimension)
 
-    await msg.bot.delete_message(msg.from_user.id, msg.message_id)
+    # await msg.bot.delete_message(msg.from_user.id, msg.message_id)
     await msg.bot.send_message(msg.from_user.id, print_data(p_data), reply_markup=nav.mainMenu)
 
 

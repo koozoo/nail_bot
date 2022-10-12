@@ -15,8 +15,8 @@ class GoogleSheet:
 
     def __init__(self):
         creds = None
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
+        if os.path.exists('bot/misc/token.pickle'):
+            with open('bot/misc/token.pickle', 'rb') as token:
                 creds = pickle.load(token)
 
         if not creds or not creds.valid:
@@ -25,9 +25,9 @@ class GoogleSheet:
             else:
                 print('flow')
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', self.SCOPES)
+                    'bot/misc/credentials.json', self.SCOPES)
                 creds = flow.run_local_server(port=0)
-            with open('token.pickle', 'wb') as token:
+            with open('bot/misc/token.pickle', 'wb') as token:
                 pickle.dump(creds, token)
 
         self.service = build('sheets', 'v4', credentials=creds)
