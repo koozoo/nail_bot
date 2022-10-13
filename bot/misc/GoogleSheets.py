@@ -7,7 +7,6 @@ from google.auth.transport.requests import Request
 import datetime
 from bot.misc.config import spreadsheet_id
 
-
 class GoogleSheet:
     SPREADSHEET_ID = spreadsheet_id
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -32,10 +31,10 @@ class GoogleSheet:
 
         self.service = build('sheets', 'v4', credentials=creds)
 
-    def update_range_values(self, range_, values):
+    def update_range_values(self, range_, values, dim='ROWS'):
         data = [{
             'range': range_,
-            'values': values
+            'values': values,
         }]
         body = {
             'valueInputOption': 'USER_ENTERED',
@@ -48,13 +47,69 @@ class GoogleSheet:
     def get_data_sheets(self, range_, dim):
         return self.service.spreadsheets().values().get(spreadsheetId=self.SPREADSHEET_ID, range=range_, majorDimension=dim).execute()
 
+    def create_std_list(self, val: list):
+        temp = []
+        for i in val:
+            if len(i) < 3:
+                temp.append(i + ['', '', ''])
+            elif len(i) < 4:
+                temp.append(i + ['', ''])
+            elif len(i) < 5:
+                temp.append(i + [''])
+            else:
+                temp.append(i)
+
+        res = []
+        l1 = []
+        l2 = []
+        l3 = []
+        for i in temp:
+            df = i[2:]
+            l1.append(df[0])
+            l2.append(df[1])
+            l3.append(df[2])
+        res.append(l1)
+        res.append(l2)
+        res.append(l3)
+
+        return res
+
     def update_date_in_sheets(self):
         date_in_table = self.get_data_sheets('C2:C2', 'ROWS')
         dt = datetime.datetime.now()
-        data = self.get_data_sheets('C3:I7', 'COLUMNS')
+
         if date_in_table['values'][0][0][:2] != dt.strftime("%d.%m.%Y")[:2]:
+            data = self.get_data_sheets('C3:AK7', 'COLUMNS')
+
+            # delete data in calendar, and add data in db
+            deleted_day = data['values'].pop(0)
+            print(deleted_day)
+
+            std_values = self.create_std_list(data['values'])
             date = [[dt.strftime("%d.%m.%Y")]]
             date_cell = 'Ежедневник!C2:C2'
             self.update_range_values(date_cell, date)
-            print(data)
+
+            update_date = self.get_data_sheets('C3:AK7', 'COLUMNS')
+
+            last_day_range = 'Ежедневник!AK3:AK7'
+            ld_values = [[update_date['values'][-1][0]], [update_date['values'][-1][1]], [''], [''], ['']]
+
+            self.update_range_values(last_day_range, ld_values)
+            self.update_range_values('Ежедневник!C5:AK7', std_values)
+
+
+# def msheets():
+#     gs = GoogleSheet()
+#
+#     range_ = 'тест!A1:C2'
+#     values = [
+#         [1, 2, 3],
+#         [4,  6],
+#         # [7, 8, 9],
+#     ]
+#     # gs.update_range_values(range_, values)
+#
+#     gs.update_date_in_sheets()
+
 

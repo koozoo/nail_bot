@@ -3,16 +3,23 @@ from aiogram.types import Message
 import bot.keyboards.inline as nav
 from bot.misc.GoogleSheets import GoogleSheet
 from bot.misc.util import print_data
+from bot.misc.config import MASTER_NAME
 
 gs = GoogleSheet()
 
 
 async def start(msg: Message):
-    user_name = msg.from_user.first_name
-    text = f'Привет, {user_name}'
+    user = msg.from_user
+    user_id = user.id
+    user_name = user.full_name
+    # user_phone = msg.contact.phone_number
+
+    text = f'Привет, {user_name}.\nменя зовут {MASTER_NAME}, хотите записаться на прием или узнать цены на услуги?\n'
 
     # обновляем дату на сегодняшнюю, со смещением всех заказов
     gs.update_date_in_sheets()
+
+    # user_data = (user_id, )
 
     await msg.bot.send_message(msg.from_user.id, text, reply_markup=nav.mainMenu)
 

@@ -14,3 +14,6 @@ DB_NAME = 'main.db'
 db = CreateTable(DB_NAME)
 db.crete_tables()
 
+# client data
+MASTER_NAME = 'ИМЯ'
+
