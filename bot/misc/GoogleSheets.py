@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 import datetime
 from bot.misc.config import spreadsheet_id
 
+
 class GoogleSheet:
     SPREADSHEET_ID = spreadsheet_id
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -98,18 +99,21 @@ class GoogleSheet:
             self.update_range_values(last_day_range, ld_values)
             self.update_range_values('Ежедневник!C5:AK7', std_values)
 
+    def get_week_date(self):
+        clear_data = [i for i in self.get_data_sheets('Ежедневник!C2:AK2', 'ROWS')['values'][0] if i != '']
+        return [f'{"".join(clear_data[i])} - {"".join(clear_data[i+1])}' for i in range(0, len(clear_data), 2)]
 
-# def msheets():
-#     gs = GoogleSheet()
-#
-#     range_ = 'тест!A1:C2'
-#     values = [
-#         [1, 2, 3],
-#         [4,  6],
-#         # [7, 8, 9],
-#     ]
-#     # gs.update_range_values(range_, values)
-#
-#     gs.update_date_in_sheets()
+def msheets():
+    gs = GoogleSheet()
+
+    range_ = 'тест!A1:C2'
+    values = [
+        [1, 2, 3],
+        [4,  6],
+        # [7, 8, 9],
+    ]
+    # gs.update_range_values(range_, values)
+    print(gs.get_week_date())
+    # gs.update_date_in_sheets()
 
 

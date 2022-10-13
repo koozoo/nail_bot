@@ -9,7 +9,7 @@ import logging
 
 from bot.misc.config import TOKEN
 
-# from bot.misc.GoogleSheets import msheets
+from bot.misc.GoogleSheets import msheets
 
 logging.basicConfig(level=logging.INFO)
 
