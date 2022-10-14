@@ -45,7 +45,7 @@ class GoogleSheet:
                                                                   body=body).execute()
         print('{0} cells updated.'.format(result.get('totalUpdatedCells')))
 
-    def get_data_sheets(self, range_, dim):
+    def get_data_sheets(self, range_, dim='ROWS'):
         return self.service.spreadsheets().values().get(spreadsheetId=self.SPREADSHEET_ID, range=range_, majorDimension=dim).execute()
 
     def create_std_list(self, val: list):
@@ -103,6 +103,36 @@ class GoogleSheet:
         clear_data = [i for i in self.get_data_sheets('Ежедневник!C2:AK2', 'ROWS')['values'][0] if i != '']
         return [f'{"".join(clear_data[i])} - {"".join(clear_data[i+1])}' for i in range(0, len(clear_data), 2)]
 
+    def get_available_day(self, week):
+        num = [i for i in week.split(' ') if i.isdigit()]
+        week_in_table = [[j for j in i.split(' ') if j.isdigit()] for i in self.get_week_date()]
+
+        week_range = {
+            0: 'Ежедневник!C3:I7',
+            1: 'Ежедневник!J3:P7',
+            2: 'Ежедневник!Q3:W7',
+            3: 'Ежедневник!X3:AD7',
+            4: 'Ежедневник!AE3:AK7'
+        }
+        res = []
+        for i in week_in_table:
+
+            if i == num:
+                range_ = week_range[week_in_table.index(num)]
+                data = self.get_data_sheets(range_, 'COLUMNS')
+
+                lst_data = data['values']
+                for i in range(len(lst_data)):
+                    # print(data['values'][i])
+                    if len(lst_data[i][2:]) == 3 and '' not in lst_data[i][2:]:
+                        continue
+                    else:
+                        res.append((lst_data[i][:2],lst_data[i][2:], i))
+
+        return res
+
+
+
 def msheets():
     gs = GoogleSheet()
 
@@ -112,8 +142,10 @@ def msheets():
         [4,  6],
         # [7, 8, 9],
     ]
+    week = '14 октября - 20 октября'
+
     # gs.update_range_values(range_, values)
-    print(gs.get_week_date())
+    print(gs.get_available_day(week))
     # gs.update_date_in_sheets()
 
 

@@ -44,12 +44,34 @@ async def print_week_keybord(msg: types.Message):
     await msg.bot.send_message(msg.from_user.id, f'выбирите неделю', reply_markup=nav.weekMenu)
 
 
+async def print_day_keybord(call: types.callback_query):
+    await call.bot.delete_message(call.from_user.id, call.message.message_id)
+    num_week = int(call.data[-1]) - 1
+    weeks = gs.get_week_date()
+    days = gs.get_available_day(weeks[num_week])
+    for_print_lst = []
+    for day in days:
+        for_print_lst.append(day[0])
+    match num_week:
+        case 0:
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+        case 1:
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+        case 2:
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+        case 3:
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+        case 4:
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+
+
 def register_user_handlers(dp: Dispatcher):
     # todo: register all user handlers
     dp.register_message_handler(start, commands=['start', 'main'])
     dp.register_callback_query_handler(watch_price, text='btnPrice')
     dp.register_callback_query_handler(back, text='btnBack')
-    dp.register_callback_query_handler(print_week_keybord, text='addEventWeek')
+    dp.register_callback_query_handler(print_week_keybord, text='addEvent')
+    dp.register_callback_query_handler(print_day_keybord, text_contains='week')
 
 
 
