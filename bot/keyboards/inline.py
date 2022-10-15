@@ -46,11 +46,29 @@ weekMenu.insert(btnWeek5)
 weekMenu.insert(btnWeek6)
 
 
-def day_keybord(callbackName,  lst):
+def day_keyboard(callback_name, days, lst):
     markup_name = InlineKeyboardMarkup(row_width=1)
-    print(lst)
+
     for i, item in enumerate(lst):
-        markup_name.add(InlineKeyboardButton(text=' '.join(item), callback_data=f'{callbackName}{i}'))
+        markup_name.add(InlineKeyboardButton(text=' '.join(item), callback_data=f'{callback_name}{"".join(days[i][0][0])}'))
+
     markup_name.add(InlineKeyboardButton(text='❌ Назад', callback_data='btnBack'))
 
     return markup_name
+
+
+def time_keyboard(callback_name, index_time, lst):
+    markup = InlineKeyboardMarkup(row_width=1)
+
+    time_unit = gs.get_title_time()
+    time_unit_dict = {
+        2: ''.join(time_unit[0]),
+        3: ''.join(time_unit[1]),
+        4: ''.join(time_unit[2])
+    }
+    for i, item in enumerate(lst):
+        markup.add(
+            InlineKeyboardButton(text=time_unit_dict[item[1]], callback_data=f'{callback_name}{item[1]}'))
+    markup.add(InlineKeyboardButton(text='❌ Назад', callback_data='btnBack'))
+
+    return markup

@@ -91,12 +91,12 @@ class GoogleSheet:
             date_cell = 'Ежедневник!C2:C2'
             self.update_range_values(date_cell, date)
 
-            update_date = self.get_data_sheets('C3:AK7', 'COLUMNS')
+            last_day_range = 'Ежедневник!AK5:AK7'
+            ld_values = [[''], [''], ['']]
 
-            last_day_range = 'Ежедневник!AK3:AK7'
-            ld_values = [[update_date['values'][-1][0]], [update_date['values'][-1][1]], [''], [''], ['']]
-
+            #update last date
             self.update_range_values(last_day_range, ld_values)
+            #update all table
             self.update_range_values('Ежедневник!C5:AK7', std_values)
 
     def get_week_date(self):
@@ -115,6 +115,7 @@ class GoogleSheet:
             4: 'Ежедневник!AE3:AK7'
         }
         res = []
+
         for i in week_in_table:
 
             if i == num:
@@ -123,15 +124,35 @@ class GoogleSheet:
 
                 lst_data = data['values']
                 for i in range(len(lst_data)):
-                    # print(data['values'][i])
                     if len(lst_data[i][2:]) == 3 and '' not in lst_data[i][2:]:
                         continue
                     else:
-                        res.append((lst_data[i][:2],lst_data[i][2:], i))
-
+                        res.append([lst_data[i], i])
         return res
 
+    def get_time_in_day(self, d):
+        range_ = 'Ежедневник!C3:AK7'
+        days = self.get_data_sheets(range_, 'COLUMNS')
+        temp = []
+        for day in days['values']:
+            if len(day) < 3:
+                temp.append(day + ['', '', ''])
+            elif len(day) < 4:
+                temp.append(day + ['', ''])
+            elif len(day) < 5:
+                temp.append(day + [''])
+            else:
+                temp.append(day)
 
+        for i in temp:
+            if i[0] == d:
+                res = [(i[j], j) for j in range(2, len(i)) if i[j] == '']
+                return res
+
+    def get_title_time(self):
+        range_ = 'Ежедневник!B5:B7'
+        time = self.get_data_sheets(range_)
+        return time['values']
 
 def msheets():
     gs = GoogleSheet()
@@ -143,9 +164,11 @@ def msheets():
         # [7, 8, 9],
     ]
     week = '14 октября - 20 октября'
-
+    data = [['17.11', 'ПЯТНИЦА', '', '-'],['17.11', 'ПЯТНИЦА', '', '-']]
     # gs.update_range_values(range_, values)
-    print(gs.get_available_day(week))
+    # print(gs.get_available_day(week))
     # gs.update_date_in_sheets()
 
+    # print(gs.get_time_in_day('31.10'))
+    # gs.get_title_time()
 

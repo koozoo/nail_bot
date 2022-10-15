@@ -49,20 +49,31 @@ async def print_day_keybord(call: types.callback_query):
     num_week = int(call.data[-1]) - 1
     weeks = gs.get_week_date()
     days = gs.get_available_day(weeks[num_week])
+
     for_print_lst = []
     for day in days:
-        for_print_lst.append(day[0])
+        for_print_lst.append(day[0][:2])
+
     match num_week:
         case 0:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 1:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 2:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 3:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 4:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keybord('dayMenu', for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+
+
+async def print_time_keybord(call: types.callback_query):
+    await call.bot.delete_message(call.from_user.id, call.message.message_id)
+    day = call.data[-5:]
+    time = gs.get_time_in_day(day)
+    print(time)
+    await call.bot.send_message(call.from_user.id, f'выбирите время',
+                                reply_markup=nav.time_keyboard('unit', time[0][1], time))
 
 
 def register_user_handlers(dp: Dispatcher):
@@ -72,6 +83,7 @@ def register_user_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(back, text='btnBack')
     dp.register_callback_query_handler(print_week_keybord, text='addEvent')
     dp.register_callback_query_handler(print_day_keybord, text_contains='week')
+    dp.register_callback_query_handler(print_time_keybord, text_contains='time')
 
 
 
