@@ -57,15 +57,20 @@ async def print_day_keybord(call: types.callback_query):
         for_print_lst.append(day[0][:2])
     match num_week:
         case 0:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю',
+                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 1:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю',
+                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 2:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю',
+                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 3:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю',
+                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
         case 4:
-            await call.bot.send_message(call.from_user.id, f'выбирите неделю', reply_markup=nav.day_keyboard('time',days, for_print_lst))
+            await call.bot.send_message(call.from_user.id, f'выбирите неделю',
+                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
 
 
 async def print_time_keybord(call: types.callback_query):
@@ -78,7 +83,8 @@ async def print_time_keybord(call: types.callback_query):
 
 async def add_order(call: types.callback_query):
     await call.bot.delete_message(call.from_user.id, call.message.message_id)
-    await call.bot.send_message(call.from_user.id, 'поделеитесь вашими контактными данными для связи.', reply_markup=rel.btnContact)
+    await call.bot.send_message(call.from_user.id, 'Для продолжения нажмите на кнопку "Поделиться контактом"'
+                                                   ' (для получения контактных данных).', reply_markup=rel.btnContact)
 
     data = []
     data.append(call.from_user.id)
@@ -86,8 +92,9 @@ async def add_order(call: types.callback_query):
     data.append('$'.join(call.data.split(".")))
 
     get_db = get.GetDataBase(DB_NAME)
+
     user_in_db = get_db.get_data_where_id(call.from_user.id)
-    if user_in_db != 0:
+    if user_in_db:
         up_db = update.UpdateDataBase(DB_NAME)
         up_db.update_step1(data[0], data[1:])
     else:
@@ -98,7 +105,7 @@ async def add_order(call: types.callback_query):
 async def update_contact_in_table(msg: types.Message):
     db = get.GetDataBase(DB_NAME)
     data = db.get_data_where_id(msg.from_user.id)
-
+    print(data)
     phone = ''
     if msg.contact is not None:
         phone = msg.contact.phone_number
@@ -106,13 +113,26 @@ async def update_contact_in_table(msg: types.Message):
     update_db = update.UpdateDataBase(DB_NAME)
     update_db.update_phone(msg.from_user.id, phone)
 
-    await msg.bot.send_message(msg.from_user.id, f"Ваше имя {msg.from_user.full_name}, все верно ?\nЕсли хотите изменить наберите, наберите /ch_name ВАШЕ ИМЯ")
-    cq = data[0][-1]
-    gs.write_order_in_table(cq, [i for i in data[0][:-1]])
-async def chenge_name(msg: types.Message):
+    if data[0][1] != None:
+        await msg.bot.send_message(msg.from_user.id,
+                                   f"{str(data[0][1]).capitalize()}, ждем вас на прием.")
+        cq = data[0][-2]
+        cell_number = gs.write_order_in_table(cq, [i for i in data[0][:-2]])
+        update_db.update_cell_number(msg.from_user.id, cell_number)
+    else:
+        await msg.bot.send_message(msg.from_user.id, f"Ваше имя {msg.from_user.full_name},"
+                                                     f" все верно ?\nЕсли хотите изменить наберите,"
+                                                     f" наберите /ch_name ВАШЕ ИМЯ")
+        cq = data[0][-2]
+        cell_number = gs.write_order_in_table(cq, [i for i in data[0][:-2] if i != None])
+        update_db.update_cell_number(msg.from_user.id, cell_number)
+
+
+async def change_name(msg: types.Message):
     name = msg.text[8:]
     update_db = update.UpdateDataBase(DB_NAME)
     update_db.update_name(msg.from_user.id, name)
+    await msg.bot.send_message(msg.from_user.id, f"{name} благодарим вас, за уточнение имени. ")
 
 
 def register_user_handlers(dp: Dispatcher):
@@ -125,7 +145,7 @@ def register_user_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(print_time_keybord, text_contains='time')
     dp.register_callback_query_handler(add_order, text_contains='unit')
     dp.register_message_handler(update_contact_in_table, content_types=['contact'])
-    dp.register_message_handler(chenge_name, commands=['ch_name'])
+    dp.register_message_handler(change_name, commands=['ch_name'])
 
 
 

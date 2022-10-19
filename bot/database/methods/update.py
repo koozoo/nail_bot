@@ -23,3 +23,10 @@ class UpdateDataBase(InitDataBase):
 
         con.commit()
         con.close()
+
+    def update_cell_number(self, id: int,  cell: str):
+        con, cursor = self.connect_db()
+        cursor.execute(f"UPDATE contacts SET  cell_number='{cell}' WHERE telegram_id={id}")
+
+        con.commit()
+        con.close()

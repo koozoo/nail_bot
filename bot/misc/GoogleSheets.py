@@ -209,7 +209,7 @@ class GoogleSheet:
             return f'{range_[:1]}{dc[time]}:{range_[:1]}{dc[time]}'
 
     def write_order_in_table(self, calback_value, contact_value):
-
+        print(calback_value)
         call = calback_value.split('_')
 
         day = call[1].replace("$", ".")
@@ -242,7 +242,8 @@ class GoogleSheet:
             if day in d:
                 target_cell = self.get_target_cell(self.get_col_addres(i), int(time))
                 self.update_range_values(target_cell, data)
-                break
+                return target_cell
+
 
 
 def msheets():
