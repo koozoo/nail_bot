@@ -58,19 +58,19 @@ async def print_day_keybord(call: types.callback_query):
     match num_week:
         case 0:
             await call.bot.send_message(call.from_user.id, f'выбирите неделю',
-                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
+                                        reply_markup=nav.day_keyboard('time', days, for_print_lst))
         case 1:
             await call.bot.send_message(call.from_user.id, f'выбирите неделю',
-                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
+                                        reply_markup=nav.day_keyboard('time', days, for_print_lst))
         case 2:
             await call.bot.send_message(call.from_user.id, f'выбирите неделю',
-                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
+                                        reply_markup=nav.day_keyboard('time', days, for_print_lst))
         case 3:
             await call.bot.send_message(call.from_user.id, f'выбирите неделю',
-                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
+                                        reply_markup=nav.day_keyboard('time', days, for_print_lst))
         case 4:
             await call.bot.send_message(call.from_user.id, f'выбирите неделю',
-                                        reply_markup=nav.day_keyboard('time',days, for_print_lst))
+                                        reply_markup=nav.day_keyboard('time', days, for_print_lst))
 
 
 async def print_time_keybord(call: types.callback_query):
