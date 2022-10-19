@@ -154,21 +154,97 @@ class GoogleSheet:
         time = self.get_data_sheets(range_)
         return time['values']
 
+    def get_col_addres(self, day):
+        days_dict = {
+            0: 'C3:C7',
+            1: 'D3:D7',
+            2: 'E3:E7',
+            3: 'F3:F7',
+            4: 'G3:G7',
+            5: 'H3:H7',
+            6: 'I3:I7',
+            7: 'J3:J7',
+            8: 'K3:K7',
+            9: 'L3:L7',
+            10: 'M3:M7',
+            11: 'N3:N7',
+            12: 'O3:O7',
+            13: 'P3:P7',
+            14: 'Q3:Q7',
+            15: 'R3:R7',
+            16: 'S3:S7',
+            17: 'T3:T7',
+            18: 'U3:U7',
+            19: 'V3:V7',
+            20: 'W3:W7',
+            21: 'X3:X7',
+            22: 'Y3:Y7',
+            23: 'Z3:Z7',
+            24: 'AA3:AA7',
+            25: 'AB3:AB7',
+            26: 'AC3:AC7',
+            27: 'AD3:AD7',
+            28: 'AE3:AE7',
+            29: 'AF3:AF7',
+            30: 'AG3:AG7',
+            31: 'AH3:AH7',
+            32: 'AI3:AI7',
+            33: 'AJ3:AJ7',
+            34: 'AK3:AK7',
+        }
+        return days_dict[day]
+
+    def get_target_cell(self, range_, time):
+        dc = {
+            2: 5,
+            3: 6,
+            4: 7,
+            '10:00': 5,
+            '15:00': 6,
+            '18:00': 7
+        }
+        if len(range_) == 7:
+            return f'{range_[:2]}{dc[time]}:{range_[:2]}{dc[time]}'
+        else:
+            return f'{range_[:1]}{dc[time]}:{range_[:1]}{dc[time]}'
+
+    def write_order_in_table(self, calback_value, contact_value):
+
+        call = calback_value.split('_')
+
+        day = call[1].replace("$", ".")
+
+        time = call[2]
+        time_unit = self.get_title_time()
+        time_unit_dict = {
+            2: ''.join(time_unit[0]),
+            3: ''.join(time_unit[1]),
+            4: ''.join(time_unit[2])
+        }
+
+        range_ = 'Ежедневник!C3:AK7'
+        all_days = self.get_data_sheets(range_, 'COLUMNS')['values']
+
+        temp = []
+        for d in all_days:
+            if len(d) < 3:
+                temp.append(d + ['', '', ''])
+            elif len(d) < 4:
+                temp.append(d + ['', ''])
+            elif len(d) < 5:
+                temp.append(d + [''])
+            else:
+                temp.append(d)
+        print(contact_value)
+        data = [['\n'.join(str(i) for i in contact_value if i != None)]]
+
+        for i, d in enumerate(temp):
+            if day in d:
+                target_cell = self.get_target_cell(self.get_col_addres(i), int(time))
+                self.update_range_values(target_cell, data)
+                break
+
+
 def msheets():
     gs = GoogleSheet()
-
-    range_ = 'тест!A1:C2'
-    values = [
-        [1, 2, 3],
-        [4,  6],
-        # [7, 8, 9],
-    ]
-    week = '14 октября - 20 октября'
-    data = [['17.11', 'ПЯТНИЦА', '', '-'],['17.11', 'ПЯТНИЦА', '', '-']]
-    # gs.update_range_values(range_, values)
-    # print(gs.get_available_day(week))
-    # gs.update_date_in_sheets()
-
-    # print(gs.get_time_in_day('31.10'))
-    # gs.get_title_time()
 

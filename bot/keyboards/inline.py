@@ -57,7 +57,7 @@ def day_keyboard(callback_name, days, lst):
     return markup_name
 
 
-def time_keyboard(callback_name, index_time, lst):
+def time_keyboard(callback_name, day, lst):
     markup = InlineKeyboardMarkup(row_width=1)
 
     time_unit = gs.get_title_time()
@@ -68,7 +68,7 @@ def time_keyboard(callback_name, index_time, lst):
     }
     for i, item in enumerate(lst):
         markup.add(
-            InlineKeyboardButton(text=time_unit_dict[item[1]], callback_data=f'{callback_name}{item[1]}'))
+            InlineKeyboardButton(text=time_unit_dict[item[1]], callback_data=f'{callback_name}_{day}_{item[1]}'))
     markup.add(InlineKeyboardButton(text='❌ Назад', callback_data='btnBack'))
 
     return markup
