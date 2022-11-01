@@ -235,7 +235,6 @@ class GoogleSheet:
                 temp.append(d + [''])
             else:
                 temp.append(d)
-        print(contact_value)
         data = [['\n'.join(str(i) for i in contact_value if i != None)]]
 
         for i, d in enumerate(temp):
@@ -244,8 +243,15 @@ class GoogleSheet:
                 self.update_range_values(target_cell, data)
                 return target_cell
 
+    def del_order(self, cell):
+        if len(cell) == 5:
+            range_ = f"Ежедневник!{cell[:2]}"
+        else:
+            range_ = f"Ежедневник!{cell[:3]}"
+        body = {}
+        self.service.spreadsheets().values().clear(spreadsheetId=self.SPREADSHEET_ID, range=range_,
+                                                        body=body).execute()
 
-
-def msheets():
-    gs = GoogleSheet()
-
+    def update_order(self, cell, data):
+        self.del_order(cell)
+        self.update_range_values(cell, data)

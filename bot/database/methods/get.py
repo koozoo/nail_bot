@@ -8,3 +8,9 @@ class GetDataBase(InitDataBase):
         data = cursor.execute(f"SELECT * FROM contacts WHERE telegram_id={id}").fetchall()
         con.close()
         return data
+
+    def get_all_data(self):
+        con, cursor = self.connect_db()
+        data = cursor.execute(f"SELECT * FROM contacts").fetchall()
+        con.close()
+        return data

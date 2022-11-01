@@ -10,7 +10,8 @@ class CreateTable(InitDataBase):
                        'telegram_name VARCHAR(100),'
                        'phone VARCHAR(15),'
                        'last_order VARCHAR(20),'
-                       'cell_number VARCHAR(10)'
+                       'cell_number VARCHAR(10),'
+                       'reminder_date VARCHAR(10)'
                        ')')
         con.commit()
 

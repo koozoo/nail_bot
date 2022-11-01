@@ -3,7 +3,7 @@ from bot.database.main import InitDataBase
 
 class UpdateDataBase(InitDataBase):
 
-    def update_name(self, id,  name):
+    def update_name(self, id: int,  name):
         con, cursor = self.connect_db()
         cursor.execute(f"UPDATE contacts SET fullname='{name}' WHERE telegram_id={id} ")
 
@@ -27,6 +27,13 @@ class UpdateDataBase(InitDataBase):
     def update_cell_number(self, id: int,  cell: str):
         con, cursor = self.connect_db()
         cursor.execute(f"UPDATE contacts SET  cell_number='{cell}' WHERE telegram_id={id}")
+
+        con.commit()
+        con.close()
+
+    def update_reminder_date(self, id: int,  date: str):
+        con, cursor = self.connect_db()
+        cursor.execute(f"UPDATE contacts SET  reminder_date='{date}' WHERE telegram_id={id}")
 
         con.commit()
         con.close()
